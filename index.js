@@ -108,7 +108,27 @@ console.log(result);
 /***************************************************************************/
 /*Function declaration section */
 
+
+/**steps 
+ * 1) take assignment group and loop for each assignment
+ * 2) check if this assignment due date is passed if no - skip this assignment
+ * 3) check submissions
+ * 4) if there is the first submission for student - create an object, else add new submission 
+ * 5) create additional properties for average score calculation
+ * 6) calculate all average scores
+ * 7) output result
+*/
+/*
+ * Function for counting scores
+ * @param {object} course  - course that would be evaluated
+ * @param {object} ag  - assignment information for cource
+ * @param {array of object} submissions  - students' submission
+ * @returns  {array of objects} - return information about each student - their average score and for each assignment
+ */
 function getLearnerData(course, ag, submissions) {
+
+    
+
 
 
     return result;
