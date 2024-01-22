@@ -3,7 +3,7 @@
  */
 // The provided course information.
 const CourseInfo = {
-    id: 452,
+    id: 451,
     name: "Introduction to JavaScript"
 };
 
@@ -143,6 +143,19 @@ function getLearnerData(course, ag, submissions) {
     //Firstly, check that assignment group is belong to course. Otherwise throw an error
     if (course.id !== ag.course_id) { throw new Error("You try to check Assignment Group for another Course!") };
 
+    const currentDate = String(new Date().toJSON()).slice(0, 10); //take current date
+    //loop for each assignment
+    for (const assignment of ag.assignments) {
+        //check the due date to be sure that we need to estimate this assignment
+        
+        if (assignment.due_at <= currentDate) {
+            console.log(assignment);
+
+        } else {
+            continue; //skip the assignment if it is not yet due
+        }
+
+    }
 
     return result;
 }
