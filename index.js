@@ -141,12 +141,10 @@ function getLearnerData(course, ag, submissions) {
         //check the due date to be sure that we need to estimate this assignment
 
         if (assignment.due_at <= currentDate) {
-            console.log(assignment);
             //check all students submission for that assignment
             for (const learnerSubmition of submissions.filter(submission => submission.assignment_id === assignment.id)) {
-                console.log(learnerSubmition);
                 let student = getLearner(result, learnerSubmition.learner_id); //get reference of a learner from result array
-                console.log(student);
+                //add new property where key is assignment id and value is calculated score
                 student[assignment.id] = calculateAssignmentScore(student, assignment, learnerSubmition.submission); // calculate assignment score
             };
 
@@ -156,11 +154,19 @@ function getLearnerData(course, ag, submissions) {
 
     }
 
-    calculateAverageScore(result);
-    deleteAdditionalProperties(result, "avg_result", "avg_max");
+    calculateAverageScore(result); //calculate average score for each student in list
+    deleteAdditionalProperties(result, "avg_result", "avg_max"); //delete additional properties that we need to calculate average score
+    
+    //return the output
     return result;
 }
 
+/**
+ * Function that get existing student from the list or add new student to list before return the result
+ * @param {array of objects} learners  - lest of all students that submitted assignments
+ * @param {number} learner_id  - id of examine learner
+ * @returns - the reference for the learner 
+ */
 function getLearner(learners, learner_id) {
     let learner = {}; //create a new object
     if (learners.some(item => item.id === learner_id)) { //check if there we have any other assignments for that student in our result array
@@ -171,26 +177,39 @@ function getLearner(learners, learner_id) {
         learner = {
             id: learner_id,
             avg: 0,
-            avg_result: 0,
-            avg_max: 0
+            avg_result: 0, //additional properties for average score calculation
+            avg_max: 0 //additional properties for average score calculation
 
         }
-        learners.push(learner);
+        //add new student to list to be sure that next time we will work with the same object
+        learners.push(learner); 
     }
 
     return learner; // return the learner object (reference connected with result array)
 }
 
+/**
+ * Function to calculate assignment score
+ * @param {object} student -student who submit the assignment
+ * @param {object} assignmentInfo - assignment info
+ * @param {object} learnerSubmition - submition information
+ * @returns assignment score rounded to 3 decimal
+ */
 function calculateAssignmentScore(student, assignmentInfo, learnerSubmition) {
-    let studentScore = learnerSubmition.score
+    let studentScore = learnerSubmition.score // local variable for student score
+    //check if the submition wasn't late
     if (learnerSubmition.submitted_at > assignmentInfo.due_at) {
         studentScore -= assignmentInfo.points_possible * 0.1 //penalty for late submission
     }
+    //check if assignment count or not for final grade
+    //decide that if possible scores is 0 - assignment doesn't count
     if (assignmentInfo.points_possible === 0) {
         return "This assignment does not count toward the final grade."
     }
+    //increase additional properties for average score
     student.avg_result += studentScore;
     student.avg_max += assignmentInfo.points_possible;
+    //return the result
     return (studentScore / assignmentInfo.points_possible).toFixed(3); //round number to 3 decimal
 
 }
@@ -212,11 +231,19 @@ function calculateAverageScore(studentsScores) {
     //no return value as we worked with references
 }
 
+/**
+ * Function that delete listed properties from objects in provided array
+ * @param {array of objects with properties} dataArray 
+ * @param  {property names} properties 
+ */
 function deleteAdditionalProperties(dataArray, ...properties){
-if(properties.length > 0)
+if(properties.length > 0) // if we have any properties that we want to delete
 {
-    dataArray.forEach(element => {
+    //loop for each element in dataArray
+    dataArray.forEach(element => { 
+        //loop for each property in property list
         properties.forEach(property =>{
+            //delete property in object
             delete element[property]
         });
         
