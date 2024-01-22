@@ -7,6 +7,11 @@ const CourseInfo = {
     name: "Introduction to JavaScript"
 };
 
+const NewCourseInfo = {
+    id: 423,
+    name: "Introduction to Python"
+};
+
 // The provided assignment group.
 const AssignmentGroup = {
     id: 12345,
@@ -31,7 +36,15 @@ const AssignmentGroup = {
             name: "Code the World",
             due_at: "3156-11-15",
             points_possible: 500
+        },
+        {
+            //case for 0 possible points
+            id: 4,
+            name: "Look at Loops",
+            due_at: "2023-02-13",
+            points_possible: 0
         }
+
     ]
 };
 
@@ -76,7 +89,33 @@ const LearnerSubmissions = [
             submitted_at: "2023-03-07",
             score: 140
         }
+    },
+    //additional test cases
+    {
+        learner_id: 125,
+        assignment_id: 4,
+        submission: {
+            submitted_at: "2023-01-29",
+            score: 0,
+        }
+    },
+    {
+        learner_id: 132,
+        assignment_id: 4,
+        submission: {
+            submitted_at: "2023-02-20",
+            score: 100,
+        }
+    },
+    {
+        learner_id: 111,
+        assignment_id: 4,
+        submission: {
+            submitted_at: "2023-02-21",
+            score: 0,
+        }
     }
+
 ];
 
 /* Output format:
@@ -99,16 +138,24 @@ const result = [
 */
 /****************************************************************************/
 /* Logic section */
-
+console.log("******************************************************************")
 try {
-    const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+    console.log(`Assignment for '${CourseInfo.name}'`);
+    //result for correct assignment
+    let result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+
+    console.log(result);
+
+    console.log(`Assignment for '${NewCourseInfo.name}'`);
+    //result for wrong course
+    result = getLearnerData(NewCourseInfo, AssignmentGroup, LearnerSubmissions);
 
     console.log(result);
 }
 catch (err) {
     console.log(err);
 }
-console.log("test Log")
+console.log("******************************************************************")
 /***************************************************************************/
 /*Function declaration section */
 
@@ -169,7 +216,8 @@ function getLearnerData(course, ag, submissions) {
  */
 function getLearner(learners, learner_id) {
     let learner = {}; //create a new object
-    if (learners.some(item => item.id === learner_id)) { //check if there we have any other assignments for that student in our result array
+    const isStudentExist = learners.some(item => item.id === learner_id); //Boolean variable
+    if (isStudentExist) { //check if there we have any other assignments for that student in our result array
         learner = learners.find(item => item.id === learner_id) //if yes, assign the link for the existing object
     }
     else {
@@ -204,7 +252,8 @@ function calculateAssignmentScore(student, assignmentInfo, learnerSubmition) {
     //check if assignment count or not for final grade
     //decide that if possible scores is 0 - assignment doesn't count
     if (assignmentInfo.points_possible === 0) {
-        return "This assignment does not count toward the final grade."
+        const scoreMsg = "This assignment does not count toward the final grade."; //string variable
+        return scoreMsg;
     }
     //increase additional properties for average score
     student.avg_result += studentScore;
