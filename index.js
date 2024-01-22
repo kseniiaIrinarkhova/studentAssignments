@@ -130,15 +130,7 @@ console.log("test Log")
  * @returns  {array of objects} - return information about each student - their average score and for each assignment
  */
 function getLearnerData(course, ag, submissions) {
-
-    let learnerData = {
-        id: "",
-        avg: "",
-        avg_result: 0, //additional property
-        avg_max: 0, //additional property
-        //"assignment_id":"assignment_score"
-
-    };
+    //array with learner's info
     let result = [];
     //Firstly, check that assignment group is belong to course. Otherwise throw an error
     if (course.id !== ag.course_id) { throw new Error("You try to check Assignment Group for another Course!") };
@@ -147,15 +139,15 @@ function getLearnerData(course, ag, submissions) {
     //loop for each assignment
     for (const assignment of ag.assignments) {
         //check the due date to be sure that we need to estimate this assignment
-        
+
         if (assignment.due_at <= currentDate) {
             console.log(assignment);
             //check all students submission for that assignment
-            for(const learnerSubmition of submissions.filter( submission => submission.assignment_id === assignment.id)){
+            for (const learnerSubmition of submissions.filter(submission => submission.assignment_id === assignment.id)) {
                 console.log(learnerSubmition);
                 let student = getLearner(result, learnerSubmition.learner_id); //get reference of a learner from result array
                 console.log(student);
-                student.avg +=1;
+                student[assignment.id] = calculateAssignmentScore(student, assignment, learnerSubmition.submission); // calculate assignment score
             };
 
         } else {
@@ -167,21 +159,36 @@ function getLearnerData(course, ag, submissions) {
     return result;
 }
 
-function getLearner(learners, learner_id){
-    let learner = {};
-    if (learners.some(item => item.id === learner_id)){
-        learner = learners.find(item => item.id === learner_id)
-        console.log(learner);
-        learner.avg += 20;
-        console.log(learners);
+function getLearner(learners, learner_id) {
+    let learner = {}; //create a new object
+    if (learners.some(item => item.id === learner_id)) { //check if there we have any other assignments for that student in our result array
+        learner = learners.find(item => item.id === learner_id) //if yes, assign the link for the existing object
     }
-    else{
+    else {
+        //if there is new student create a new object and add it to our result array
         learner = {
             id: learner_id,
             avg: 0,
+            avg_result: 0,
+            avg_max: 0
+
         }
         learners.push(learner);
     }
 
-    return learner;
+    return learner; // return the learner object (reference connected with result array)
+}
+
+function calculateAssignmentScore(student, assignmentInfo, learnerSubmition) {
+    let studentScore = learnerSubmition.score
+    if (learnerSubmition.submitted_at > assignmentInfo.due_at) {
+        studentScore -= studentScore * 0.1 //penalty for late submission
+    }
+    if (assignmentInfo.points_possible === 0) {
+        return "This assignment does not count toward the final grade."
+    }
+    student.avg_result += studentScore;
+    student.avg_max += assignmentInfo.points_possible;
+    return studentScore / assignmentInfo.points_possible;
+
 }
