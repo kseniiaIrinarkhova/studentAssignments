@@ -182,13 +182,13 @@ function getLearner(learners, learner_id) {
 function calculateAssignmentScore(student, assignmentInfo, learnerSubmition) {
     let studentScore = learnerSubmition.score
     if (learnerSubmition.submitted_at > assignmentInfo.due_at) {
-        studentScore -= studentScore * 0.1 //penalty for late submission
+        studentScore -= assignmentInfo.points_possible * 0.1 //penalty for late submission
     }
     if (assignmentInfo.points_possible === 0) {
         return "This assignment does not count toward the final grade."
     }
     student.avg_result += studentScore;
     student.avg_max += assignmentInfo.points_possible;
-    return studentScore / assignmentInfo.points_possible;
+    return (studentScore / assignmentInfo.points_possible).toFixed(3); //round number to 3 decimal
 
 }
