@@ -3,7 +3,7 @@
  */
 // The provided course information.
 const CourseInfo = {
-    id: 451,
+    id: 452,
     name: "Introduction to JavaScript"
 };
 
@@ -100,11 +100,15 @@ const result = [
 /****************************************************************************/
 /* Logic section */
 
+try {
+    const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 
-const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
-
-console.log(result);
-
+    console.log(result);
+}
+catch (err) {
+    console.log(err);
+}
+console.log("test Log")
 /***************************************************************************/
 /*Function declaration section */
 
@@ -127,8 +131,17 @@ console.log(result);
  */
 function getLearnerData(course, ag, submissions) {
 
-    
+    let learnerData = {
+        id: "",
+        avg: "",
+        avg_result: 0, //additional property
+        avg_max: 0, //additional property
+        //"assignment_id":"assignment_score"
 
+    };
+    let result = [];
+    //Firstly, check that assignment group is belong to course. Otherwise throw an error
+    if (course.id !== ag.course_id) { throw new Error("You try to check Assignment Group for another Course!") };
 
 
     return result;
