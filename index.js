@@ -156,6 +156,8 @@ function getLearnerData(course, ag, submissions) {
 
     }
 
+    calculateAverageScore(result);
+    // deleteAdditionalProperties(["avg_result", "avg_max"]);
     return result;
 }
 
@@ -191,4 +193,21 @@ function calculateAssignmentScore(student, assignmentInfo, learnerSubmition) {
     student.avg_max += assignmentInfo.points_possible;
     return (studentScore / assignmentInfo.points_possible).toFixed(3); //round number to 3 decimal
 
+}
+
+/**
+ * Function that calculate average score for each student
+ * @param {array of objects} studentsScores 
+ */
+function calculateAverageScore(studentsScores) {
+    //loop through all student's score info
+    for (const index in studentsScores) {
+        //if maximum available score is 0 skip this student
+        if (studentsScores[index].avg_max !== 0) {
+            //calculate average score
+            studentsScores[index].avg = (studentsScores[index].avg_result / studentsScores[index].avg_max).toFixed(3);
+        }
+        else { continue; }
+    }
+    //no return value as we worked with references
 }
