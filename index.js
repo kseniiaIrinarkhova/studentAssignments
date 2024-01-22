@@ -157,7 +157,7 @@ function getLearnerData(course, ag, submissions) {
     }
 
     calculateAverageScore(result);
-    // deleteAdditionalProperties(["avg_result", "avg_max"]);
+    deleteAdditionalProperties(result, "avg_result", "avg_max");
     return result;
 }
 
@@ -210,4 +210,16 @@ function calculateAverageScore(studentsScores) {
         else { continue; }
     }
     //no return value as we worked with references
+}
+
+function deleteAdditionalProperties(dataArray, ...properties){
+if(properties.length > 0)
+{
+    dataArray.forEach(element => {
+        properties.forEach(property =>{
+            delete element[property]
+        });
+        
+    });
+}
 }
