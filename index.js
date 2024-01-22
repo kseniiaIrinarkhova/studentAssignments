@@ -150,6 +150,13 @@ function getLearnerData(course, ag, submissions) {
         
         if (assignment.due_at <= currentDate) {
             console.log(assignment);
+            //check all students submission for that assignment
+            for(const learnerSubmition of submissions.filter( submission => submission.assignment_id === assignment.id)){
+                console.log(learnerSubmition);
+                let student = getLearner(result, learnerSubmition.learner_id); //get reference of a learner from result array
+                console.log(student);
+                student.avg +=1;
+            };
 
         } else {
             continue; //skip the assignment if it is not yet due
@@ -160,4 +167,21 @@ function getLearnerData(course, ag, submissions) {
     return result;
 }
 
+function getLearner(learners, learner_id){
+    let learner = {};
+    if (learners.some(item => item.id === learner_id)){
+        learner = learners.find(item => item.id === learner_id)
+        console.log(learner);
+        learner.avg += 20;
+        console.log(learners);
+    }
+    else{
+        learner = {
+            id: learner_id,
+            avg: 0,
+        }
+        learners.push(learner);
+    }
 
+    return learner;
+}
