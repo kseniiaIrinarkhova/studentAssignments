@@ -25,32 +25,37 @@ The input information presented as data types:
 
 - Each **AssignmentInfo** object within the assignments array looks like this
 
-```{
+```JavaScript
+{
   "id": number,
   "name": string,
   // the due date for the assignment
   "due_at": Date string,
   // the maximum points possible for the assignment
   "points_possible": number,
-}```
+}
+```
 
 
 - An array of **LearnerSubmission** objects, which each look like this:
 
 
-```{
+```JavaScript
+{
     "learner_id": number,
     "assignment_id": number,
     "submission": {
       "submitted_at": Date string,
       "score": number
     }
-}```
+}
+```
 
 
 The **Output** of the script should be represented as:
 
-```{
+```JavaScript
+{
     // the ID of the learner for which this data has been collected
     "id": number,
     // the learner’s total, weighted average, in which assignments
@@ -64,7 +69,8 @@ The **Output** of the script should be represented as:
     <assignment_id>: number,
     // if an assignment is not yet due, it should not be included in either
     // the average or the keyed dictionary of scores
-}```
+}
+```
 
 Project main functions:
 1. **getLearnerData( CourseInfo, AssignmentGroup, [LearnerSubmission] ) ** - main function. 
