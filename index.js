@@ -43,7 +43,15 @@ const AssignmentGroup = {
             name: "Look at Loops",
             due_at: "2023-02-13",
             points_possible: 0
+        },
+        {
+            //case for string in  possible points
+            id: 5,
+            name: "Look at Arrays",
+            due_at: "2023-02-13",
+            points_possible: "Not graded"
         }
+
 
     ]
 };
@@ -113,6 +121,30 @@ const LearnerSubmissions = [
         submission: {
             submitted_at: "2023-02-21",
             score: 0,
+        }
+    },
+    {
+        learner_id: 111,
+        assignment_id: 1,
+        submission: {
+            submitted_at: "2023-01-01",
+            score: "25", //string instead of number, but still number
+        }
+    },
+    {
+        learner_id: 111,
+        assignment_id: 2,
+        submission: {
+            submitted_at: "2023-01-21",
+            score: "I didn't do it" , //string
+        }
+    },
+    {
+        learner_id: 111,
+        assignment_id: 5, //test for possible points not a number
+        submission: {
+            submitted_at: "2023-01-21",
+            score: 10
         }
     }
 
@@ -244,22 +276,40 @@ function getLearner(learners, learner_id) {
  * @returns assignment score rounded to 3 decimal
  */
 function calculateAssignmentScore(student, assignmentInfo, learnerSubmition) {
-    let studentScore = learnerSubmition.score // local variable for student score
+    let studentScore = 0;
+    //check if the score is a number
+    if (typeof learnerSubmition.score !== 'number')
+    {
+        //if not try to convert to number
+            let scoreValue = Number(learnerSubmition.score);
+        if (!isNaN(scoreValue) ){
+            //use converted value
+            studentScore = scoreValue;
+        }
+        else{
+            //do not use this assignment in average score.
+            return `Student has wrong information for assignment score: ${learnerSubmition.score}`; //string variable
+        }
+
+    } else { studentScore = learnerSubmition.score; } // local variable for student score
+     
     //check if the submition wasn't late
     if (learnerSubmition.submitted_at > assignmentInfo.due_at) {
         studentScore -= assignmentInfo.points_possible * 0.1 //penalty for late submission
     }
     //check if assignment count or not for final grade
     //decide that if possible scores is 0 - assignment doesn't count
-    if (assignmentInfo.points_possible === 0) {
+    //decide that if possible points are not a number - assignment doesn't count
+    const possiblePoints = Number(assignmentInfo.points_possible);
+    if (possiblePoints === 0 || isNaN(possiblePoints)) {
         const scoreMsg = "This assignment does not count toward the final grade."; //string variable
         return scoreMsg;
     }
     //increase additional properties for average score
     student.avg_result += studentScore;
-    student.avg_max += assignmentInfo.points_possible;
+    student.avg_max += possiblePoints;
     //return the result
-    return (studentScore / assignmentInfo.points_possible).toFixed(3); //round number to 3 decimal
+    return (studentScore / possiblePoints).toFixed(3); //round number to 3 decimal
 
 }
 
