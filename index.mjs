@@ -1,4 +1,4 @@
-
+import * as InputData from './input_data.mjs';
 
 /* Output format:
 
@@ -22,15 +22,15 @@ const result = [
 /* Logic section */
 console.log("******************************************************************")
 try {
-    console.log(`Assignment for '${CourseInfo.name}'`);
+    console.log(`Assignment for '${InputData.CourseInfo.name}'`);
     //result for correct assignment
-    let result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+    let result = getLearnerData(InputData.CourseInfo, InputData.AssignmentGroup, InputData.LearnerSubmissions);
 
     console.log(result);
 
-    console.log(`Assignment for '${NewCourseInfo.name}'`);
+    console.log(`Assignment for '${InputData.NewCourseInfo.name}'`);
     //result for wrong course
-    result = getLearnerData(NewCourseInfo, AssignmentGroup, LearnerSubmissions);
+    result = getLearnerData(InputData.NewCourseInfo, InputData.AssignmentGroup, InputData.LearnerSubmissions);
 
     console.log(result);
 }
